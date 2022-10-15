@@ -21,6 +21,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
+        'type',
     ];
 
     /**
@@ -42,20 +43,4 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
-    public function sendPasswordResetNotification($token)
-    {
-        
-        $data = [
-            'subject' => 'Reset application password',
-            'body' => 'You are receiving this email because we received a password reset request for your account.',
-            'reset_password' => 'Please reset password',
-            'limit' => 'This password reset link will expire in :count minutes.',
-            'extras' => 'If you did not request a password reset, no further action is required.',
-            'token' => $token,
-        ];
-
-        //Notification::send($user,new TestEnrollMent($enrollmentData));
-        $this->notify(new \App\Notifications\MailResetPasswordNotification($data));
-
-    }
 }

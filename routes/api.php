@@ -21,15 +21,17 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
-
-
 Route::resource('comment', 'CommentController')->only([
    'index','show'
-]);
+])->middleware('api.admin');
+
+
 
 Route::resource('comment','CommentController')->only([
    'store','update','destroy'
 ])->middleware('auth:api');
+
+
 
 Route::group(['middleware' => ['cors', 'json.response']],function(){
       //public Authentication routes
@@ -38,11 +40,13 @@ Route::group(['middleware' => ['cors', 'json.response']],function(){
 
       Route::post('/register','Auth\ApiAuthController@register')->name('resgister.api');
 
-      Route::post('/emailpassword','Auth\ApiForgetPasswordController@sendResetLinkEmail')->name('emailpass.api');
+      Route::post('/forgotpassword','Auth\ApiForgetpasswordContrloller@forgot')->name('forgot.api');
+
+      Route::post('/resetpassword','Auth\ApiForgetpasswordContrloller@reset')->name('reset.api');
 });
 
 
-Route::get('/password/reset/{token}', 'Auth\ApiResetPasswordController@showResetForm');
+//Route::get('/password/reset/{token}', 'Auth\ApiResetPasswordController@showResetForm');
 
 Route::middleware('auth:api')->group(function(){
    Route::post('/logout', 'Auth\ApiAuthController@logout')->name('logout.api');                 
