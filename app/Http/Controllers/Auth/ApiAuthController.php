@@ -19,21 +19,28 @@ class ApiAuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
-
+            'type' => 'integer'
         ]);
         if ($validator->fails()) {
             # code...
             return response(['errors'=> $validator->errors()->all()], 422);            
         }
-
-        $request['password'] = Hash::make($request['password']);
-        $request['remember_token'] = Str::random(10);
-        $user = User::create($request->toArray());
-
+        $type = $request->get('type') ? $request->get('type') : 0;
+        $pass['password'] = Hash::make($request->get('password'));
+        //$request['remember_token'] = Str::random(10);
+        $user = User::create([
+            'name' => $request->get('name'),
+            'email' => $request->get('email'),
+            'password' => $pass['password'],
+            'type' => intval($type)
+        ]);
         $token = $user->createToken('Laravel Password Grant Client')->accessToken;
         $response = ['token' => $token];
         
-        return response($response, 200);
+        return response([
+            'user' => $user,
+            'user_token' => $token,
+        ], 200);
     }
       
     public function login(Request $request)
@@ -54,7 +61,10 @@ class ApiAuthController extends Controller
                     # code...
                     $token = $user->createToken('Laravel Password Grant Client')->accessToken;
                     $response = ['token' => $token];
-                    return response($response, 200);
+                    return response([
+                        'user' => $user,
+                        'user_token' => $response,
+                    ], 200);
                 } else {
                     $response = ["message" => "password mismatch"];
                     return response($response, 422);

@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
        //$this->call(UsersTableSeeder::class);
 
        Comment::factory()
-       ->times(3)
+       ->times(5)
        ->create();
     }
 }

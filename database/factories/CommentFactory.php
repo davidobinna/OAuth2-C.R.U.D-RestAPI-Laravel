@@ -16,10 +16,13 @@ class CommentFactory extends Factory
      */
     public function definition()
     {
+         $random = rand(1,10);
+          $this->model::truncate();
         return [
             //
             'name' => $this->faker->name,
-            'text' => $this->faker->text()
+            'text' => $this->faker->sentence(),
+            'user_id' => intval($random)
         ];
     }
 }
