@@ -23,7 +23,7 @@ class ApiAuthController extends Controller
         ]);
         if ($validator->fails()) {
             # code...
-            return response(['errors'=> $validator->errors()->all()], 422);            
+            return response(['errors'=> $validator->errors()->all()], 422);
         }
         $type = $request->get('type') ? $request->get('type') : 0;
         $pass['password'] = Hash::make($request->get('password'));
@@ -36,13 +36,13 @@ class ApiAuthController extends Controller
         ]);
         $token = $user->createToken('Laravel Password Grant Client')->accessToken;
         $response = ['token' => $token];
-        
+
         return response([
             'user' => $user,
             'user_token' => $token,
         ], 200);
     }
-      
+
     public function login(Request $request)
     {
         # code...
@@ -71,7 +71,7 @@ class ApiAuthController extends Controller
 
                 }
            } else {
-              
+
             $response = ["message" =>'User does not exist'];
             return response($response, 422);
            }
@@ -82,7 +82,7 @@ class ApiAuthController extends Controller
         # code...
         $token = $request->user()->token();
         $token->revoke();
-        
+
         $response = ['message' => 'you have been sucessfully logged out'];
         return response($response,200);
 
